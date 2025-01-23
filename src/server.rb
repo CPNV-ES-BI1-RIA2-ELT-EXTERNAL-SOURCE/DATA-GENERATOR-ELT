@@ -12,6 +12,10 @@ class Server < Sinatra::Base
   get '/api/:v/stationboards/:region/:stop' do
     halt 404, "Unsupported API Version: #{params['v']}" if params['v'][1..params['v'].length] != App.instance.config['api']['version']
     mimetype = request.env['HTTP_ACCEPT']
+
+    # only for external remove pdf to avoid s3 error
+    halt 415, 'Unsupported Media Type: application/pdf' if mimetype == 'application/pdf'
+
     stop = params['stop']
 
     if params['date']
