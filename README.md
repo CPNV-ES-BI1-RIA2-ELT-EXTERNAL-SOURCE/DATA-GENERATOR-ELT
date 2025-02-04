@@ -25,7 +25,7 @@ More details can be found in the [project wiki](https://github.com/CPNV-ES-BI1-S
 ### Prerequisites
 
 * Ruby 3.0 or later [official doc](https://www.ruby-lang.org/fr/downloads/)
-    * or use Rbenv [official doc](https://github.com/rbenv/rbenv#readme)
+    * or use Rbenv 1.3.2 [official doc](https://github.com/rbenv/rbenv#readme)
 * Git version 2.47.1 or later [official doc](https://git-scm.com/)
 * Bundler 2.5.21 or later (already installed with ruby) [official doc](https://bundler.io/)
 
@@ -48,9 +48,35 @@ bundle install
 
 #### Run the server
 
+**index.rb** — Script pour démarrer le serveur Ruby
+
+##### COMMAND
+
 ```bash
-ruby .\src\index.rb -p 8080
+ruby ./src/index.rb [OPTIONS]
 ```
+
+The **index.rb** script launches a Ruby server with various configuration options (port, development mode, test mode, etc.).
+
+##### OPTIONS
+
+**-p \<port>**
+:   Sets the port on which the application listens.  
+Default: `8080`  
+Example: `ruby ./src/index.rb -p 8080` 
+
+**-d**, **--dev**, **--development**
+:   Starts the server in development mode.  
+Default: **`production`**  
+Example: `ruby ./src/index.rb --dev`
+
+**-t**, **--test**
+:   Starts the server in test mode.  
+Example: `ruby ./src/index.rb -t`
+
+##### NOTES
+If no option is specified, the application will run with default settings (typically production mode and the default port).
+
 
 Test the API with the following command to retrieve the stationboard for Zurich on the 12th of December 2024 in PDF
 format:
@@ -70,18 +96,24 @@ curl -X GET "http://localhost:8080/api/v1.1/stationboards/CH/zurich?date=01/13/2
 #### Run the tests
 
 ```bash
+# Run all tests
 rspec
+
+# Run a specific test
+rspec spec/services/stationboard_service_spec.rb
 ```
 
-### Docker
+### On production environment
 
-#### Build the image
+#### Docker
+
+##### Build the image
 
 ```bash
 docker build -t data-generator .
 ```
 
-#### Run the container
+##### Run the container
 
 ```bash
 export AWS_ACCESS_KEY_ID=<AWS_KEY>
@@ -92,6 +124,7 @@ docker run -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -p 8088:8088 data-gener
 ## Directory structure
 
 ```shell
+├── config.yaml
 ├── Gemfile                       # Dependencies
 ├── Gemfile.lock                  
 ├── Dockerfile                    # Docker image configuration                  
@@ -99,6 +132,7 @@ docker run -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -p 8088:8088 data-gener
 ├── assets                        # Images or other assets
 │   └── images
 ├── docs                          # Documentation
+├── logs                          # Log's file directory (not versioned)
 ├── spec                          # Tests
 └── src                           # Source code 
     ├── config.rb
@@ -143,8 +177,6 @@ docker run -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -p 8088:8088 data-gener
 ## License
 
 The project is released under a [MIT license](./LICENSE).
-
-Copyright (c) 2024 CPNV - [cpnv.ch](https://cpnv.ch).
 
 ## Contact
 
